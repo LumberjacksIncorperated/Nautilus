@@ -5,8 +5,8 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
-
-
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class NautilusServerConnection implements NautilusKeyListener {
    private boolean isConnected = false;
@@ -39,7 +39,7 @@ public class NautilusServerConnection implements NautilusKeyListener {
        };
        this.webSocketToServerConnection.connect();
        this.isConnected = true;
-     } catch ( URISyntaxException exception ) {
+     } catch ( Exception exception ) {
        exception.printStackTrace();
      }
    }

@@ -49,9 +49,13 @@ class NautilusKeyboardClient extends JPanel implements KeyListener {
     public void keyTyped(KeyEvent keyEvent) { }
 
     public static void main(String[] commandLineArguments) {
-      boolean hasParameterForURIConnectionToServer = commandLineArguments.length > 1;
+      boolean hasParameterForURIConnectionToServer = commandLineArguments.length > 0;
       if (hasParameterForURIConnectionToServer) {
-        NautilusKeyboardClient.setupAndRunNautilusKeyboardClientConnectingToNautilusServerWithURI(commandLineArguments[1]);
+        try{
+            NautilusKeyboardClient.setupAndRunNautilusKeyboardClientConnectingToNautilusServerWithURI(new URI(commandLineArguments[0]));
+        } catch (Exception exception) {
+          exception.printStackTrace();
+        }
       } else {
         System.out.println("Usage: Nautilus <URI for Nautilus Server>");
       }
