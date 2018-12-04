@@ -48,8 +48,13 @@ class NautilusKeyboardClient extends JPanel implements KeyListener {
     }
     public void keyTyped(KeyEvent keyEvent) { }
 
-    public static void main(String[] s) {
-      NautilusKeyboardClient.setupAndRunNautilusKeyboardClientConnectingToNautilusServerWithURI(asdasd);
+    public static void main(String[] commandLineArguments) {
+      boolean hasParameterForURIConnectionToServer = commandLineArguments.length > 1;
+      if (hasParameterForURIConnectionToServer) {
+        NautilusKeyboardClient.setupAndRunNautilusKeyboardClientConnectingToNautilusServerWithURI(commandLineArguments[1]);
+      } else {
+        System.out.println("Usage: Nautilus <URI for Nautilus Server>");
+      }
     }
 
     private static void showWindowAndAddPanelAsMainDisplay(JPanel panelInQuestion) {
