@@ -8,9 +8,9 @@ public class NautilusRoom implements NautilusRoomObserver NautilusKeyReceiver {
 
   }
 
-  public int getNumberOfNautilusRooms() {
-    return this.terminalsInTheNautilusRoom.length;
-  }
+  //public int getNumberOfNautilusRooms() {
+  //  return this.terminalsInTheNautilusRoom.length;
+  //}
 
   public NautilusRoom newEmptyNautilusRoom() {
     return new NautilusRoom();

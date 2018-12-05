@@ -9,12 +9,12 @@ public class NautilusRoomTerminal {
   private double rightBottomZ;
 
   public static String getNautilusFormatDescriptionForTerminalConfigurationString() {
-    return "terminal_initilisation_string~left-top-x~left-top-y~left-top-z~right-bottom-x~right-bottom-y~right-bottom-z";
+    return "terminal_initilisation_string~position-x~position-y~position-z~rotation-x~rotation-y~rotation-z";
   }
 
   private NautilusRoomTerminal(String terminalConfigurationString) {
     String[] terminalConfigurationStringComponents = terminalConfigurationString.split("~");
-    
+
   }
 
   public NautilusRoomTerminal newNautilusTerminalFromConfigurationString(String terminalConfigurationString) {

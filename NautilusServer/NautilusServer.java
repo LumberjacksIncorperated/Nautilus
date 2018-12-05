@@ -43,7 +43,7 @@ public class NautilusServer {
       this.nautilusRoom.addTerminalToRoom(newNautilusTerminal);
     }
 
-    this.nautilusKeyboardClientManager = NautilusKeyboardClientManager.createNautilusKeyboardClientManagerAndStartListeningForClientsOnPortWithNautilusKeyReceiverAndNumberOfNautilusRooms(keyboardControlPortNumber, this.nautilusRoom, this.nautilusRoom.getNumberOfNautilusRooms());
+    this.nautilusKeyboardClientManager = NautilusKeyboardClientManager.createNautilusKeyboardClientManagerAndStartListeningForClientsOnPortWithNautilusKeyReceiver(keyboardControlPortNumber, this.nautilusRoom);
     this.nautilusVRClientManager = NautilusVRClientManager.createNautilusVRClientManagerAndStartListeningForClientsOnPortWithNautilusRoomObserver(vrPortNumber, this.nautilusRoom);
 
     this.nautilusRoom.setNautilusRoomUpdateListener(this.nautilusVRClientManager);
