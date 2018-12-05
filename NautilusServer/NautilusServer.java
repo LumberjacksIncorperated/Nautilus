@@ -38,9 +38,11 @@ public class NautilusServer {
   private NautilusServer(int keyboardControlPortNumber, int vrPortNumber, ArrayList<String> nautilusTerminalConfigurationStrings) {
     this.nautilusRoom = NautilusRoom.newEmptyNautilusRoom();
 
+    int currentTerminalID = 0;
     for (String nautilusTerminalConfigurationString : nautilusTerminalConfigurationStrings) {
-      NautilusRoomTerminal newNautilusTerminal = NautilusRoomTerminal.newNautilusTerminalFromConfigurationString(nautilusTerminalConfigurationString);
+      NautilusRoomTerminal newNautilusTerminal = NautilusRoomTerminal.newNautilusTerminalFromConfigurationStringAndTerminalID(nautilusTerminalConfigurationString, currentTerminalID);
       this.nautilusRoom.addTerminalToRoom(newNautilusTerminal);
+      currentTerminalID += 1;
     }
 
     this.nautilusKeyboardClientManager = NautilusKeyboardClientManager.createNautilusKeyboardClientManagerAndStartListeningForClientsOnPortWithNautilusKeyReceiver(keyboardControlPortNumber, this.nautilusRoom);

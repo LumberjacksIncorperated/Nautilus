@@ -42,5 +42,5 @@ public class NautilusRoom implements NautilusRoomObserver NautilusKeyReceiver {
     if (this.nautilusRoomUpdateListener != null) {
       this.nautilusRoomUpdateListener.receivedNotificationThatANautilusRoomTerminalWasUpdated(nautilusRoomTerminalThatWasUpdated);
     }
-  }
+  }  
 }

@@ -14,12 +14,18 @@ import org.java_websocket.server.WebSocketServer;
 
 
 
-public class NautilusVRClientManager extends WebSocketServer {
-  private NautilusRoomObserver nautilusRoomObserver;
+public class NautilusVRClientManager implements NautilusRoomUpdateListener extends WebSocketServer {
   private NautilusWebSocketClientPool<NautilusVRClient> poolOfConnectedVRClients = new NautilusWebSocketClientPool<NautilusVRClient>();
+  private NautilusRoomObserver nautilusRoomObserver;
 
   private class NautilusVRClient {
-    public NautilusVRClient() {  }
+    private final WebSocket webSocketConnectionToVRClient;
+    public NautilusVRClient(WebSocket webSocketConnectionToVRClient) {
+      this.webSocketConnectionToVRClient = webSocketConnectionToVRClient;
+    }
+    public void sendStringMessageToClient(String stringMessage) {
+      this.webSocketConnectionToVRClient.send(stringMessage);
+    }
   }
 
   public static NautilusKeyboardClientManager createNautilusVRClientManagerAndStartListeningForClientsOnPortWithNautilusRoomObserver(int vrPortNumber, NautilusRoomObserver nautilusRoomObserver) {
@@ -35,11 +41,18 @@ public class NautilusVRClientManager extends WebSocketServer {
   @Override
   public void onOpen(WebSocket vrClientWebSocketConnection, ClientHandshake handshake) {
     System.out.println(vrClientWebSocketConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " connected as a VR client");
+    NautilusVRClient newNautilusVRClient = new NautilusVRClient(vrClientWebSocketConnection);
+    this.poolOfConnectedVRClients.addClientToPoolWithWebSocketConnection(newNautilusVRClient, vrClientWebSocketConnection);
+    for (NautilusRoomTerminal nautilusRoomTerminal : this.nautilusRoomObserver.getCurrentNautilusRoomTerminals()) {
+      this.sendNautilusRoomTerminalPositionStateToVRClient(nautilusRoomTerminal, newNautilusVRClient);
+      this.sendNautilusRoomTerminalDisplayStateToVRClient(nautilusRoomTerminal, newNautilusVRClient);
+    }
   }
 
   @Override
   public void onClose(WebSocket vrClientWebSocketConnection, int code, String reason, boolean remote) {
     System.out.println(vrClientWebSocketConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " disconnected from being a VR client");
+    this.poolOfConnectedVRClients.removeClientFromPoolForWebSocketConnection(vrClientWebSocketConnection);
   }
 
   @Override
@@ -62,6 +75,21 @@ public class NautilusVRClientManager extends WebSocketServer {
     System.out.println("Started listening for VR client connections");
     //setConnectionLostTimeout(0);
     //setConnectionLostTimeout(100);
+  }
+
+  @Override
+  public void receivedNotificationThatANautilusRoomTerminalWasUpdated(NautilusRoomTerminal terminalThatWasUpdated) {
+    for (NautilusVRClient vrClientInPool : poolOfConnectedVRClients.getListOfAllClientsInPool()) {
+      this.sendNautilusRoomTerminalDisplayStateToVRClient(terminalThatWasUpdated, vrClientInPool);
+    }
+  }
+
+  private void sendNautilusRoomTerminalPositionStateToVRClient(NautilusRoomTerminal nautilusRoomTerminal, NautilusVRClient nautilusVRClient) {
+    nautilusVRClient.sendStringMessageToClient(nautilusRoomTerminal.constructNautilusRoomTerminalPositionStateUpdateMessage());
+  }
+
+  private void sendNautilusRoomTerminalDisplayStateToVRClient(NautilusRoomTerminal nautilusRoomTerminal, NautilusVRClient nautilusVRClient) {
+    nautilusVRClient.sendStringMessageToClient(nautilusRoomTerminal.constructNautilusRoomTerminalDisplayStateUpdateMessage());
   }
 
 }
